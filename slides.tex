@@ -17,20 +17,21 @@
 \maketitle
 
 \section{Intro}
+% \begin{frame}
+%   \frametitle{What is CFEngine?}
+%   \begin{quote}
+%     ``CFEngine is a software solution that helps system administrators
+%     and other stakeholders in the IT organization become more agile
+%     and respond faster to business requirements while ensuring SLAs
+%     and regulatory compliance, through automation.''
+%     --- \url{http://cfengine.com/learn/what-is-cfengine/}
+%   \end{quote}
+% \end{frame}
+
+
 \begin{frame}
+  %\frametitle{\emph{Huh?} What \emph{the heck} is CFEngine?}
   \frametitle{What is CFEngine?}
-  \begin{quote}
-    ``CFEngine is a software solution that helps system administrators
-    and other stakeholders in the IT organization become more agile
-    and respond faster to business requirements while ensuring SLAs
-    and regulatory compliance, through automation.''
-    --- \url{http://cfengine.com/learn/what-is-cfengine/}
-  \end{quote}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{\emph{Huh?} What \emph{the heck} is CFEngine?}
   \begin{quote}
     ``Cfengine, or the configuration engine is an agent /
     \emph{software robot and a high level policy language}
@@ -97,9 +98,7 @@
 \begin{frame}
   \frametitle{The agent workflow}
   \begin{center}
-    \includegraphics[height=0.75\textheight]{agent-workflow.png}
-
-    {\footnotesize Image source: \url{http://cfengine.com/}}
+    \includegraphics[height=0.8\textheight]{agent-workflow.png}
   \end{center}
 \end{frame}
 
@@ -134,13 +133,12 @@ files:
     A promise has three possible outcomes:
 
     \+
-    \begin{tabular}{>{\bf}rcc}
+    \begin{tabular}{>{\em}rcc}
     {\bf state is\ldots}    & \multicolumn{2}{c}{\DN state was\ldots \DN} \\
     \multicolumn{1}{c}{\DN} & as promised  & not as such                  \\
     as promised             & {\color{green}\bf kept}
-                                           & {\color{violet}\bf repaired} \\
-    not as such             & {\color{gray}\em (impossible!)}
-                                           & {\color{red}\bf not kept}    \\
+                                           & {\color{violet}\bf repaired}   \\
+    not as such             &              & {\color{red}\bf not kept}    \\
     \end{tabular}
   \end{center}
 \end{frame}
@@ -163,19 +161,17 @@ bundle \alert<1>{agent} test \{
 \}
   \end{semiverbatim}
 
-\only<1>{\alert{What CFEngine component should execute this bundle.}
- More on this later.}
+%\only<1>{\alert{What CFEngine component should execute this bundle.}
+%  More on this later.}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{CFEngine 3 components}
-  \begin{center}
-    \includegraphics[height=0.8\textheight]{components-overview.png}
-
-    {\footnotesize Image source: \url{http://cfengine.com/}}
-  \end{center}
-\end{frame}
+% \begin{frame}
+%   \frametitle{CFEngine 3 components}
+%   \begin{center}
+%     \includegraphics[height=0.8\textheight]{components-overview.png}
+%   \end{center}
+% \end{frame}
 
 % \begin{frame}[fragile]
 %   \frametitle{Bundles, II}
@@ -210,7 +206,7 @@ bundle agent keep_secrets \{
   files:
     \alert<2>{"$(secrets)"}
       create => "false",
-      perms  => \alert<3>{mog("0400", "root", "root")};
+      perms  => mog("0400", "root", "root");
 \}
   \end{semiverbatim}
 
@@ -218,49 +214,49 @@ bundle agent keep_secrets \{
   Also available: simple strings, and (fake) integers and floats.}
 \only<2>{Since \texttt{secrets} is a \emph{list},
   \alert{this implcitly \emph{loops} over all its values.}}
-\only<3>{\small \texttt{mog()} = mode-owner-group.
-  \alert{It's a standard library \emph{body}.}}
+% \only<3>{\small \texttt{mog()} = mode-owner-group.
+%   \alert{It's a standard library \emph{body}.}}
 \end{frame}
 
 
-\begin{frame}[fragile]
-  \frametitle{Bodies}
-  \begin{columns}
-    \begin{column}{0.75\linewidth}
-      \begin{quote}
-        ``the definition of a promise can grow complicated. Complex
-        promises are best understood by breaking them down into
-        independent, re-usable components. The CFEngine reserved word
-        \texttt{body} is used to encapsulate the details of complex
-        promise attribute values. Bodies can optionally have
-        parameters.''
-      \end{quote}
-    \end{column}
-    \begin{column}{0.5\linewidth}
-\begin{semiverbatim}\small
-body perms secret \{
- mode   => "0600";
- owners => \{ "root" \};
- groups => \{ "root" \};
-\}
-\end{semiverbatim}
+% \begin{frame}[fragile]
+%   \frametitle{Bodies}
+%   \begin{columns}
+%     \begin{column}{0.75\linewidth}
+%       \begin{quote}
+%         ``the definition of a promise can grow complicated. Complex
+%         promises are best understood by breaking them down into
+%         independent, re-usable components. The CFEngine reserved word
+%         \texttt{body} is used to encapsulate the details of complex
+%         promise attribute values. Bodies can optionally have
+%         parameters.''
+%       \end{quote}
+%     \end{column}
+%     \begin{column}{0.5\linewidth}
+% \begin{semiverbatim}\small
+% body perms secret \{
+%  mode   => "0600";
+%  owners => \{ "root" \};
+%  groups => \{ "root" \};
+% \}
+% \end{semiverbatim}
 
-\+
-\begin{semiverbatim}\small
-body perms
- mog(mode, user,group)
-\{
- owners=>\{"$(user)"\};
- groups=>\{"$(group)"\};
- mode  =>"$(mode)";
-\}
-\end{semiverbatim}
-    \end{column}
-  \end{columns}
-  \begin{references}
-    \url{https://docs.cfengine.com/latest/guide-language-concepts-bodies.html}
-  \end{references}
-\end{frame}
+% \+
+% \begin{semiverbatim}\small
+% body perms
+%  mog(mode, user,group)
+% \{
+%  owners=>\{"$(user)"\};
+%  groups=>\{"$(group)"\};
+%  mode  =>"$(mode)";
+% \}
+% \end{semiverbatim}
+%     \end{column}
+%   \end{columns}
+%   \begin{references}
+%     \url{https://docs.cfengine.com/latest/guide-language-concepts-bodies.html}
+%   \end{references}
+% \end{frame}
 
 
 \begin{frame}[fragile]
@@ -273,8 +269,8 @@ bundle agent nss_myhostname \{
 \}
 
 bundle \alert<1>{edit_line} enable_nss_myhostname \{
-  \alert<4>{replace_patterns:}
-      \alert<2>{"(?x) ^hosts:{\textbackslash}s* \alert<3>{(((?!myhostname){\textbackslash}w+{\textbackslash}s+)+)}$"}
+  \alert<2>{replace_patterns:}
+      \alert<3>{"(?x) ^hosts:{\textbackslash}s* \alert<4>{(((?!myhostname){\textbackslash}w+{\textbackslash}s+)+)}$"}
       replace_with => value(
         "hosts: $(match.1) myhostname");
 \}
@@ -282,12 +278,12 @@ bundle \alert<1>{edit_line} enable_nss_myhostname \{
 
   \only<1>{Editing is a complex operation, that requires a sequence of
     action. \alert{Therefore, it has a special kind of bundle.}}
-  \only<2>{Full \href{http://www.pcre.org/}{PCRE} syntax is supported
+  \only<3>{Full \href{http://www.pcre.org/}{PCRE} syntax is supported
     everywhere in CFEngine.}
-  \only<3>{\alert{CFEngine will not let you substitute a regexp with a
+  \only<4>{\alert{CFEngine will not let you substitute a regexp with a
       string that matches the same regexp!} Need to learn what
     ``negative lookahead assertions'' are\ldots}
-  \only<4>{Also available: \texttt{insert\_lines},
+  \only<2>{Also available: \texttt{insert\_lines},
     \texttt{delete\_lines}, \texttt{field\_edits}. Which can all be
     combined together.}
 \end{frame}
@@ -325,22 +321,18 @@ vars:
     "rules"     string => "/etc/sysconfig/iptables";
   os_debian|os_ubuntu::
     "rules"     string => "/etc/iptables/rules.v4";
-  \alert<3>{any::}
+  any::
     "www_ports" ilist => \{ "80", "443" \};
 files:
   "$(rules)"
   \alert<1>{edit_template  => "iptables.tmpl",}
-  \alert<2>{edit_defaults  => empty,}
+  \alert<1>{edit_defaults  => empty,}
   perms          => secret,
   create         => "true";
 \}
 \end{semiverbatim}
-  \only<1>{What template file to use.}
-  \only<2>{\alert{Initial content of the editing buffer.} In other
-    words: what to do if the destination file already exists, scratch
-    or append?}
-  \only<3>{\alert{Needed to un-do the limiting effect of context
-      \texttt{os\_debian} up above.}}
+  \alert<1>{What template file to use and the initial content of the
+    editing buffer.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -350,7 +342,7 @@ files:
 # iptables.tmpl
 \alert<1>{[% CFEngine www:: %]}
 -A INPUT -p tcp --dport \alert<2>{$(www_ports)} -j ACCEPT
-[% CFEngine \alert<3>{am_policy_hub}:: %]
+[% CFEngine am_policy_hub:: %]
 -A INPUT -p tcp --dport 5308 -j ACCEPT
 \end{semiverbatim}
 
@@ -359,7 +351,6 @@ files:
     is defined.}
   \only<2>{Since \texttt{www\_ports} is a list, \alert{this implicitly
       loops over all values.}}
-  \only<3>{CFEngine defines this context on the policy servers.}
 \end{frame}
 
 
@@ -370,18 +361,14 @@ files:
 \begin{semiverbatim}\small
 classes:
   "os_debian"
-  \alert<1>{expression => "debian\alert<2>{.}\alert<3>{!ubuntu}";}
+  \alert<1>{expression => "debian.!ubuntu";}
 
   "os_debian6"
-  expression => "os_debian\alert<2>{&}(debian_6|debian_squeeze)";
+  expression => "os_debian\alert<2>&(debian_6|debian_squeeze)";
 \end{semiverbatim}
 
   \only<1>{\alert{Class \texttt{os\_debian} will be defined if class
       \texttt{debian} is defined and class \texttt{ubuntu} is not.}}
-  \only<2>{\alert{The boolean \emph{AND} operator can be spelled as dot
-      ``\texttt{.}'' or with the more familiar ``\texttt{\&}''.}}
-  \only<3>{One of the quirks of CFEngine: \alert{context
-      \texttt{debian} is defined on Ubuntu systems as well.}}
 \end{frame}
 
 
@@ -538,17 +525,17 @@ bundle agent send_email(to, subj, body) \{
   \begin{description}
     \small
     \item[meta] Information about the bundle, mainly useful for documentation purposes.
-    \item[vars] \emph{Definition of variables}
+    \item[vars] \textbf{Definition of variables}
     \item[defaults] ``Default'' values for bundle parameters
     \item[classes] Definition of additional contexts
     \item[users] Create or delete users in \texttt{/etc/passwd}
-    \item[files] \emph{Create, edit, or audit files}
-    \item[packages] \emph{Install or remove software packages}
-    \item[guest\_environments] Control VMs using \texttt{libvirt}
+    \item[files] \textbf{Create, edit, or audit files}
+    \item[packages] \textbf{Install or remove software packages}
+    \item[guest\_environments] Control VMs using \emph{libvirt}
     \item[methods] Invoke other bundles
     \item[processes] Stop or signal running processes.
     \item[services] Start or stop system services.
-    \item[commands] \emph{Run arbitrary commands.}
+    \item[commands] \textbf{Run arbitrary commands.}
     \item[storage] Mount NFS filesystems.
     \item[databases] Create, alter, or manage DBs and tables on SQL, LDAP, or MS Registry
     \item[reports] Print lines to the log file.
@@ -584,6 +571,7 @@ methods:
 
 \begin{semiverbatim}\small
 $ cat test.cf
+{\em [\ldots]}
 bundle agent test \{
   vars:
       "variables" slist => variablesmatching(".+");
@@ -597,8 +585,7 @@ $ time cf-agent -f ./test.cf -b test
 \textbf{real	43m5.345s}
 \end{semiverbatim}
 
-  \+ \small That, and ``normal ordering'' which is the root of all
-  evil.
+  \+ That, and ``normal ordering.''
 \end{frame}
 
 
